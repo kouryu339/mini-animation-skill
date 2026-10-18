@@ -1,0 +1,1035 @@
+{
+  "$ref": "#/definitions/AnimationDocument",
+  "definitions": {
+    "AnimationDocument": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "const": "rusie.motion/1"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        },
+        "background": {
+          "type": "string"
+        },
+        "assets": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ImageAsset"
+          }
+        },
+        "layers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnimationLayer"
+          }
+        },
+        "captionTheme": {
+          "enum": [
+            "cinema",
+            "paper"
+          ],
+          "type": "string"
+        },
+        "captionStyle": {
+          "description": "Optional fixed style fields. Sizes use a shared 1280-wide reference canvas; inset/offset use percentages.",
+          "$ref": "#/definitions/CaptionStyle"
+        },
+        "camera": {
+          "description": "Flat fields are compatibility input; new input uses component composition.",
+          "$ref": "#/definitions/CameraDefinition"
+        },
+        "cameras": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CameraDefinition"
+          }
+        },
+        "cameraCuts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CameraCut"
+          }
+        },
+        "surface": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "svg"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "entities": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/EntityDefinition"
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "source",
+                "type"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "canvas"
+                },
+                "nodes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CanvasNode"
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "nodes",
+                "type"
+              ]
+            }
+          ]
+        },
+        "tracks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MotionTrack"
+          }
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SceneEffect"
+          }
+        },
+        "markers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "at": {
+                "type": "number"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "at",
+              "title"
+            ]
+          }
+        },
+        "captions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "at": {
+                "type": "number"
+              },
+              "duration": {
+                "type": "number"
+              },
+              "text": {
+                "type": "string"
+              },
+              "speaker": {
+                "type": "string"
+              },
+              "fade": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "at",
+              "duration",
+              "text"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "duration",
+        "format",
+        "height",
+        "surface",
+        "width"
+      ]
+    },
+    "ImageAsset": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "image"
+        },
+        "src": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "src",
+        "type"
+      ]
+    },
+    "AnimationLayer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "space": {
+          "enum": [
+            "camera",
+            "canvas"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "space"
+      ]
+    },
+    "CaptionStyle": {
+      "description": "Optional fixed style fields. Sizes use a shared 1280-wide reference canvas; inset/offset use percentages.",
+      "type": "object",
+      "properties": {
+        "fontSize": {
+          "type": "number"
+        },
+        "font": {
+          "enum": [
+            "mono",
+            "sans",
+            "serif"
+          ],
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "background": {
+          "type": "string"
+        },
+        "align": {
+          "enum": [
+            "center",
+            "left",
+            "right"
+          ],
+          "type": "string"
+        },
+        "position": {
+          "enum": [
+            "bottom",
+            "top"
+          ],
+          "type": "string"
+        },
+        "inset": {
+          "type": "number"
+        },
+        "offset": {
+          "type": "number"
+        },
+        "padding": {
+          "type": "number"
+        },
+        "radius": {
+          "type": "number"
+        },
+        "lineHeight": {
+          "type": "number"
+        },
+        "shadow": {
+          "type": "boolean"
+        },
+        "showSpeaker": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CameraDefinition": {
+      "description": "Flat fields are compatibility input; new input uses component composition.",
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "zoom": {
+          "type": "number"
+        },
+        "components": {
+          "$ref": "#/definitions/CameraComponents"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CameraComponents": {
+      "type": "object",
+      "properties": {
+        "transform": {
+          "$ref": "#/definitions/Pick%3CPartial%3CTransformComponent%3E%2C%22x%22%7C%22y%22%7C%22scale%22%3E"
+        },
+        "camera": {
+          "description": "Camera position is its world-space center. Width/height are a paired base view, not video resolution.",
+          "$ref": "#/definitions/CameraViewportComponent"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Pick<Partial<TransformComponent>,\"x\"|\"y\"|\"scale\">": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "scale": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CameraViewportComponent": {
+      "description": "Camera position is its world-space center. Width/height are a paired base view, not video resolution.",
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "height",
+        "width"
+      ]
+    },
+    "CameraCut": {
+      "type": "object",
+      "properties": {
+        "at": {
+          "type": "number"
+        },
+        "camera": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "at",
+        "camera"
+      ]
+    },
+    "EntityDefinition": {
+      "description": "A layer assignment belongs to a root; its descendants inherit its coordinate space.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "parent": {
+          "type": "string"
+        },
+        "layer": {
+          "type": "string"
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "transform": {
+              "$ref": "#/definitions/Partial%3CTransformComponent%3E"
+            },
+            "graphic": {
+              "$ref": "#/definitions/GraphicComponent"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ]
+    },
+    "Partial<TransformComponent>": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "rotate": {
+          "type": "number"
+        },
+        "scale": {
+          "type": "number"
+        },
+        "scaleX": {
+          "type": "number"
+        },
+        "scaleY": {
+          "type": "number"
+        },
+        "opacity": {
+          "type": "number"
+        },
+        "pivotX": {
+          "type": "number"
+        },
+        "pivotY": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GraphicComponent": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "circle",
+            "image",
+            "line",
+            "path",
+            "rect",
+            "text"
+          ],
+          "type": "string"
+        },
+        "asset": {
+          "type": "string"
+        },
+        "fit": {
+          "enum": [
+            "contain",
+            "cover",
+            "stretch"
+          ],
+          "type": "string"
+        },
+        "fill": {
+          "type": "string"
+        },
+        "stroke": {
+          "type": "string"
+        },
+        "strokeWidth": {
+          "type": "number"
+        },
+        "progress": {
+          "type": "number"
+        },
+        "dash": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "r": {
+          "type": "number"
+        },
+        "radius": {
+          "type": "number"
+        },
+        "d": {
+          "type": "string"
+        },
+        "x2": {
+          "type": "number"
+        },
+        "y2": {
+          "type": "number"
+        },
+        "text": {
+          "type": "string"
+        },
+        "fontSize": {
+          "type": "number"
+        },
+        "font": {
+          "enum": [
+            "mono",
+            "sans",
+            "serif"
+          ],
+          "type": "string"
+        },
+        "align": {
+          "enum": [
+            "center",
+            "left",
+            "right"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ]
+    },
+    "CanvasNode": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EntityDefinition"
+        },
+        {
+          "$ref": "#/definitions/LegacyCanvasNode",
+          "description": "Legacy input is normalized once; it is not the runtime entity."
+        }
+      ]
+    },
+    "LegacyCanvasNode": {
+      "description": "Legacy input is normalized once; it is not the runtime entity.",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "circle",
+            "group",
+            "image",
+            "line",
+            "path",
+            "rect",
+            "text"
+          ],
+          "type": "string"
+        },
+        "parent": {
+          "type": "string"
+        },
+        "layer": {
+          "type": "string"
+        },
+        "progress": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "x2": {
+          "type": "number"
+        },
+        "y2": {
+          "type": "number"
+        },
+        "fill": {
+          "type": "string"
+        },
+        "stroke": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "asset": {
+          "type": "string"
+        },
+        "fit": {
+          "enum": [
+            "contain",
+            "cover",
+            "stretch"
+          ],
+          "type": "string"
+        },
+        "strokeWidth": {
+          "type": "number"
+        },
+        "dash": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "r": {
+          "type": "number"
+        },
+        "radius": {
+          "type": "number"
+        },
+        "d": {
+          "type": "string"
+        },
+        "fontSize": {
+          "type": "number"
+        },
+        "font": {
+          "enum": [
+            "mono",
+            "sans",
+            "serif"
+          ],
+          "type": "string"
+        },
+        "align": {
+          "enum": [
+            "center",
+            "left",
+            "right"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type"
+      ]
+    },
+    "MotionTrack": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/TransformTrack"
+        },
+        {
+          "$ref": "#/definitions/TweenTrack"
+        },
+        {
+          "$ref": "#/definitions/WaveTrack"
+        },
+        {
+          "$ref": "#/definitions/FollowTrack"
+        },
+        {
+          "$ref": "#/definitions/ColorTrack"
+        },
+        {
+          "$ref": "#/definitions/CameraTrack"
+        }
+      ]
+    },
+    "TransformTrack": {
+      "description": "Multi-property action. Missing from values continue the state at the action start.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "transform"
+        },
+        "target": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        },
+        "to": {
+          "$ref": "#/definitions/Partial%3CTransformComponent%3E"
+        },
+        "from": {
+          "$ref": "#/definitions/Partial%3CTransformComponent%3E"
+        },
+        "ease": {
+          "enum": [
+            "in",
+            "inOut",
+            "linear",
+            "out"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "duration",
+        "target",
+        "to",
+        "type"
+      ]
+    },
+    "TweenTrack": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "tween"
+        },
+        "target": {
+          "type": "string"
+        },
+        "property": {
+          "$ref": "#/definitions/MotionProperty"
+        },
+        "at": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        },
+        "from": {
+          "type": "number"
+        },
+        "to": {
+          "type": "number"
+        },
+        "ease": {
+          "enum": [
+            "in",
+            "inOut",
+            "linear",
+            "out"
+          ],
+          "type": "string"
+        },
+        "repeat": {
+          "type": "number"
+        },
+        "yoyo": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "duration",
+        "from",
+        "property",
+        "target",
+        "to",
+        "type"
+      ]
+    },
+    "MotionProperty": {
+      "enum": [
+        "height",
+        "opacity",
+        "pivotX",
+        "pivotY",
+        "progress",
+        "rotate",
+        "scale",
+        "scaleX",
+        "scaleY",
+        "width",
+        "x",
+        "x2",
+        "y",
+        "y2"
+      ],
+      "type": "string"
+    },
+    "WaveTrack": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "wave"
+        },
+        "target": {
+          "type": "string"
+        },
+        "property": {
+          "$ref": "#/definitions/MotionProperty"
+        },
+        "at": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        },
+        "center": {
+          "type": "number"
+        },
+        "amplitude": {
+          "type": "number"
+        },
+        "period": {
+          "type": "number"
+        },
+        "phase": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "amplitude",
+        "center",
+        "duration",
+        "period",
+        "property",
+        "target",
+        "type"
+      ]
+    },
+    "FollowTrack": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "follow"
+        },
+        "target": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "orient": {
+          "type": "boolean"
+        },
+        "ease": {
+          "enum": [
+            "in",
+            "inOut",
+            "linear",
+            "out"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "duration",
+        "points",
+        "target",
+        "type"
+      ]
+    },
+    "ColorTrack": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "color"
+        },
+        "target": {
+          "type": "string"
+        },
+        "property": {
+          "enum": [
+            "fill",
+            "stroke"
+          ],
+          "type": "string"
+        },
+        "at": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "ease": {
+          "enum": [
+            "in",
+            "inOut",
+            "linear",
+            "out"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "duration",
+        "from",
+        "property",
+        "target",
+        "to",
+        "type"
+      ]
+    },
+    "CameraTrack": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "camera"
+        },
+        "camera": {
+          "type": "string"
+        },
+        "property": {
+          "enum": [
+            "x",
+            "y",
+            "zoom"
+          ],
+          "type": "string"
+        },
+        "at": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        },
+        "from": {
+          "type": "number"
+        },
+        "to": {
+          "type": "number"
+        },
+        "ease": {
+          "enum": [
+            "in",
+            "inOut",
+            "linear",
+            "out"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "duration",
+        "from",
+        "property",
+        "to",
+        "type"
+      ]
+    },
+    "SceneEffect": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "dust",
+            "rain",
+            "ripple",
+            "vignette"
+          ],
+          "type": "string"
+        },
+        "at": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        },
+        "seed": {
+          "type": "number"
+        },
+        "count": {
+          "type": "number"
+        },
+        "color": {
+          "type": "string"
+        },
+        "opacity": {
+          "type": "number"
+        },
+        "speed": {
+          "type": "number"
+        },
+        "size": {
+          "type": "number"
+        },
+        "area": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "width": {
+              "type": "number"
+            },
+            "height": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "height",
+            "width",
+            "x",
+            "y"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:rusie:current:animation",
+  "title": "AnimationDocument",
+  "$comment": "Generated from TypeScript. Run npm run contracts:generate; do not edit."
+}
