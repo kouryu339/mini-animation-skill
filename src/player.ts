@@ -41,7 +41,7 @@ export class AnimationPlayer {
   this.epoch++;this.loading=false;this.stopFrame();this.timeline.seek(ms);this.terminal=undefined;this.error=undefined;
   try{this.paint();this.notify();}catch(error){this.fail(error);throw error;}
  }
- setCaptionsEnabled(enabled:boolean){this.alive();if(typeof enabled!=='boolean')throw new Error('字幕开关必须是布尔值');if(enabled===this.captionsEnabled)return;this.captionsEnabled=enabled;try{this.paint();this.notify();}catch(error){this.fail(error);throw error;}}
+ setCaptionsEnabled(enabled:boolean){this.alive();if(typeof enabled!=='boolean')throw new Error('captionsEnabled must be a boolean');if(enabled===this.captionsEnabled)return;this.captionsEnabled=enabled;try{this.paint();this.notify();}catch(error){this.fail(error);throw error;}}
  setRate(rate:number){
   this.alive();if(!Number.isFinite(rate)||rate<.25||rate>4)throw new Error('Rate outside .25..4');
   try{const playing=this.time.status==='playing';this.timeline.setRate(rate,this.scheduler.now());if(this.time.status==='ended')this.stopFrame();if(playing)this.paint();this.notify();}catch(error){this.fail(error);throw error;}

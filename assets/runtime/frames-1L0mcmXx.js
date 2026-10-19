@@ -1,5 +1,5 @@
 import { r as e } from "./compile-CHXnrHMM.js";
-import { n as t, o as n, r, t as i } from "./images-6P03TLU2.js";
+import { n as t, o as n, r, t as i } from "./images-MuxrSMtz.js";
 //#region src/export/captions.ts
 var a = {
 	sans: "\"Microsoft YaHei\",sans-serif",
@@ -28,13 +28,13 @@ function o(e, t, n, r, i) {
 //#endregion
 //#region src/export/frames.ts
 var s = (e) => {
-	if (e?.aborted) throw new DOMException("导出已取消", "AbortError");
+	if (e?.aborted) throw new DOMException("Export cancelled", "AbortError");
 };
 function c(a, c, u, d, f) {
 	s(f);
 	let p = a.document;
 	if (d.canvasDrawers?.length && p.surface.type !== "canvas") throw Error("Canvas drawers require a canvas surface");
-	if (d.captionsEnabled !== void 0 && typeof d.captionsEnabled != "boolean") throw Error("字幕开关必须是布尔值");
+	if (d.captionsEnabled !== void 0 && typeof d.captionsEnabled != "boolean") throw Error("captionsEnabled must be a boolean");
 	let m = n(p.captionStyle, d.captionStyle, p.captionTheme), h = document.createElement("div");
 	h.style.cssText = `position:fixed;left:-10000px;top:0;width:${p.width}px;height:${p.height}px;pointer-events:none;`, h.setAttribute("aria-hidden", "true"), document.body.appendChild(h);
 	let g = document.createElement("canvas");
@@ -80,8 +80,8 @@ function l(e, t, n) {
 	return new Promise((r, i) => {
 		let a, o = (t) => {
 			clearTimeout(a), n?.removeEventListener("abort", s), e.onload = null, e.onerror = null, t ? i(t) : r();
-		}, s = () => o(new DOMException("导出已取消", "AbortError"));
-		e.onload = () => o(), e.onerror = () => o(/* @__PURE__ */ Error("动画帧无法绘制")), a = setTimeout(() => o(/* @__PURE__ */ Error("动画帧绘制超时")), 1e4), n?.addEventListener("abort", s, { once: !0 }), n?.aborted ? s() : e.src = t;
+		}, s = () => o(new DOMException("Export cancelled", "AbortError"));
+		e.onload = () => o(), e.onerror = () => o(/* @__PURE__ */ Error("Could not render animation frame")), a = setTimeout(() => o(/* @__PURE__ */ Error("Animation frame rendering timed out")), 1e4), n?.addEventListener("abort", s, { once: !0 }), n?.aborted ? s() : e.src = t;
 	});
 }
 //#endregion

@@ -87,7 +87,7 @@ var h = {
 		this.drawers = r.map((e) => {
 			if (!a.has(e.layer ?? "$default") || typeof e.draw != "function") throw Error("Canvas drawer requires an existing layer and a draw function");
 			return { ...e };
-		}), this.element = e.ownerDocument.createElement("canvas"), this.element.setAttribute("aria-label", "动画画面"), this.element.style.cssText = "display:block;width:100%;height:100%;object-fit:contain;";
+		}), this.element = e.ownerDocument.createElement("canvas"), this.element.setAttribute("aria-label", "Animation canvas"), this.element.style.cssText = "display:block;width:100%;height:100%;object-fit:contain;";
 		let o = Math.min(e.ownerDocument.defaultView?.devicePixelRatio ?? 1, 2, Math.sqrt(4194304 / (i.width * i.height)));
 		this.element.width = i.width * o, this.element.height = i.height * o;
 		let s = this.element.getContext("2d");

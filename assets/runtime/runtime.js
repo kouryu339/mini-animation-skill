@@ -1,5 +1,5 @@
 import { _ as e, a as t, b as n, g as r, h as i, i as a, m as o, n as s, r as c, t as l, u, v as d, x as f, y as p } from "./compile-CHXnrHMM.js";
-import { a as m, i as h, n as g, o as _, r as v, t as y } from "./images-6P03TLU2.js";
+import { a as m, i as h, n as g, o as _, r as v, t as y } from "./images-MuxrSMtz.js";
 import { AnimationTimeline as b, clipTime as x, sampleTime as S } from "./timeline.js";
 //#region src/player.ts
 var C = class {
@@ -107,7 +107,7 @@ var C = class {
 		}
 	}
 	setCaptionsEnabled(e) {
-		if (this.alive(), typeof e != "boolean") throw Error("字幕开关必须是布尔值");
+		if (this.alive(), typeof e != "boolean") throw Error("captionsEnabled must be a boolean");
 		if (e !== this.captionsEnabled) {
 			this.captionsEnabled = e;
 			try {

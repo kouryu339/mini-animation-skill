@@ -6,10 +6,10 @@ export interface GifExportOptions extends AnimationOptions {fps?:10|15;maxWidth?
 /** Offline, local-only GIF export. No frames retained after encoding; finite work/output budgets. */
 export async function exportAnimationGif(json:string,options:GifExportOptions={}):Promise<Blob>{
  checkAbort(options.signal);const compiled=compileAnimation(json),d=compiled.document,fps=options.fps??10,maxWidth=options.maxWidth??480;
- if(![10,15].includes(fps)||![320,480,640].includes(maxWidth))throw new Error('GIF 支持 10/15 fps 与 320/480/640 像素宽度');
+ if(![10,15].includes(fps)||![320,480,640].includes(maxWidth))throw new Error('GIF supports 10/15 fps and widths of 320/480/640 pixels');
  const ratio=Math.min(1,maxWidth/d.width,960/d.height),width=Math.max(1,Math.round(d.width*ratio)),height=Math.max(1,Math.round(d.height*ratio));
  const totalCs=Math.max(1,Math.round(d.duration/10)),count=Math.min(totalCs,Math.ceil(d.duration*fps/1000));
- if(count>1800||count*width*height>300000000)throw new Error('GIF 过长或尺寸过大，请降低分辨率或缩短片段');
+ if(count>1800||count*width*height>300000000)throw new Error('GIF exceeds frame or pixel limits; reduce resolution or duration');
  const frames=createExportFrames(compiled,width,height,options,options.signal),encoder=new GifEncoder(width,height);
  try{
   await frames.prepare();

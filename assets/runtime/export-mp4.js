@@ -1,5 +1,5 @@
 import { n as e } from "./compile-CHXnrHMM.js";
-import { n as t, t as n } from "./frames-DShHTA_B.js";
+import { n as t, t as n } from "./frames-1L0mcmXx.js";
 //#region src/export/mp4.ts
 var r = (e) => new Uint8Array([e >>> 8, e & 255]), i = (e) => new Uint8Array([
 	e >>> 24,
@@ -47,7 +47,7 @@ var c = (e, ...t) => {
 		if (this.finished) throw Error("MP4 already finalized");
 		if (!e.length || !Number.isSafeInteger(t) || !Number.isSafeInteger(n) || n <= 0 || t !== this.duration) throw Error("MP4 requires contiguous frames without reordering");
 		if (!this.samples.length && !r) throw Error("MP4 must start with a key frame");
-		if (this.samples.length >= 18e3 || t + n > 6e8 || this.bytes + e.length > this.maxBytes) throw Error("视频超过导出资源上限（10 分钟 / 256 MB）");
+		if (this.samples.length >= 18e3 || t + n > 6e8 || this.bytes + e.length > this.maxBytes) throw Error("Video exceeds export limits (10 minutes / 256 MB)");
 		this.bytes += e.length, this.duration += n, this.samples.push({
 			data: e.slice(),
 			timestamp: t,
@@ -87,12 +87,12 @@ var c = (e, ...t) => {
 //#endregion
 //#region src/export-mp4.ts
 async function f(r, i = {}) {
-	if (n(i.signal), typeof VideoEncoder > "u" || typeof VideoFrame > "u") throw Error("此浏览器不支持 MP4 编码，请使用支持 WebCodecs 的 Chrome、Edge 或 WebView2。");
+	if (n(i.signal), typeof VideoEncoder > "u" || typeof VideoFrame > "u") throw Error("MP4 encoding requires a browser with WebCodecs support, such as Chrome, Edge, or WebView2.");
 	let a = e(r), o = a.document, s = i.fps ?? 30;
 	if (i.canvasDrawers?.length && o.surface.type !== "canvas") throw Error("Canvas drawers require a canvas surface");
-	if (![24, 30].includes(s)) throw Error("导出帧率只支持 24 或 30");
-	if (i.maxHeight !== void 0 && ![720, 1080].includes(i.maxHeight)) throw Error("导出尺寸无效");
-	if (i.captionsEnabled !== void 0 && typeof i.captionsEnabled != "boolean") throw Error("字幕开关必须是布尔值");
+	if (![24, 30].includes(s)) throw Error("Export frame rate must be 24 or 30 fps");
+	if (i.maxHeight !== void 0 && ![720, 1080].includes(i.maxHeight)) throw Error("Invalid export dimensions");
+	if (i.captionsEnabled !== void 0 && typeof i.captionsEnabled != "boolean") throw Error("captionsEnabled must be a boolean");
 	let c = Math.min(1, 1920 / o.width, (i.maxHeight ?? 1080) / o.height), l = Math.max(2, Math.floor(o.width * c / 2) * 2), u = Math.max(2, Math.floor(o.height * c / 2) * 2), f = Math.ceil(o.duration * s / 1e3), p = Math.round(o.duration * 1e3), m = {
 		codec: "avc1.420028",
 		width: l,
@@ -102,7 +102,7 @@ async function f(r, i = {}) {
 		latencyMode: "realtime",
 		avc: { format: "avc" }
 	}, h = await VideoEncoder.isConfigSupported(m);
-	if (n(i.signal), !h.supported) throw Error("当前浏览器没有可用的 H.264 编码器，无法导出 MP4。");
+	if (n(i.signal), !h.supported) throw Error("No H.264 encoder is available in this browser for MP4 export.");
 	let g = t(a, l, u, i, i.signal), _, v, y = new d(l, u), b = /* @__PURE__ */ new Map();
 	try {
 		await g.prepare(), _ = new VideoEncoder({
@@ -119,7 +119,7 @@ async function f(r, i = {}) {
 					let r = new Uint8Array(e.byteLength);
 					e.copyTo(r);
 					let i = b.get(e.timestamp);
-					if (i === void 0) throw Error("编码器返回未知帧时间");
+					if (i === void 0) throw Error("Encoder returned an unknown frame timestamp");
 					b.delete(e.timestamp), y.add(r, e.timestamp, i, e.type === "key");
 				} catch (e) {
 					v = e instanceof Error ? e : Error(String(e));
@@ -145,7 +145,7 @@ async function f(r, i = {}) {
 			l !== e && (i.onProgress?.(l / 100), e = l), t % 8 == 0 && await new Promise((e) => setTimeout(e, 0));
 		}
 		if (await _.flush(), n(i.signal), v) throw v;
-		if (b.size) throw Error("编码器遗漏了视频帧");
+		if (b.size) throw Error("Encoder dropped video frames");
 		let t = y.finalize();
 		return i.onProgress?.(1), t;
 	} finally {

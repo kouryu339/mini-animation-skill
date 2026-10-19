@@ -7,12 +7,12 @@ import {resolveCaptionStyle} from '../captions.js';
 import {drawCaption} from './captions.js';
 import type {AnimationOptions} from '../model.js';
 
-export const checkAbort=(signal?:AbortSignal)=>{if(signal?.aborted)throw new DOMException('导出已取消','AbortError');};
+export const checkAbort=(signal?:AbortSignal)=>{if(signal?.aborted)throw new DOMException('Export cancelled','AbortError');};
 /** Shared offline render surface. Does not touch the preview instance or its playhead. */
 export function createExportFrames(compiled:ReturnType<typeof compileAnimation>,width:number,height:number,options:AnimationOptions,signal?:AbortSignal){
  checkAbort(signal);const d=compiled.document;
  if(options.canvasDrawers?.length&&d.surface.type!=='canvas')throw new Error('Canvas drawers require a canvas surface');
- if(options.captionsEnabled!==undefined&&typeof options.captionsEnabled!=='boolean')throw new Error('字幕开关必须是布尔值');
+ if(options.captionsEnabled!==undefined&&typeof options.captionsEnabled!=='boolean')throw new Error('captionsEnabled must be a boolean');
  const style=resolveCaptionStyle(d.captionStyle,options.captionStyle,d.captionTheme);
  const host=document.createElement('div');host.style.cssText=`position:fixed;left:-10000px;top:0;width:${d.width}px;height:${d.height}px;pointer-events:none;`;host.setAttribute('aria-hidden','true');document.body.appendChild(host);
  const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
@@ -39,4 +39,4 @@ export function createExportFrames(compiled:ReturnType<typeof compileAnimation>,
   },destroy,
  };
 }
-function loadImage(image:HTMLImageElement,url:string,signal?:AbortSignal){return new Promise<void>((resolve,reject)=>{let timer:ReturnType<typeof setTimeout>;const finish=(error?:Error|DOMException)=>{clearTimeout(timer);signal?.removeEventListener('abort',abort);image.onload=null;image.onerror=null;error?reject(error):resolve();};const abort=()=>finish(new DOMException('导出已取消','AbortError'));image.onload=()=>finish();image.onerror=()=>finish(new Error('动画帧无法绘制'));timer=setTimeout(()=>finish(new Error('动画帧绘制超时')),10000);signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted){abort();return;}image.src=url;});}
+function loadImage(image:HTMLImageElement,url:string,signal?:AbortSignal){return new Promise<void>((resolve,reject)=>{let timer:ReturnType<typeof setTimeout>;const finish=(error?:Error|DOMException)=>{clearTimeout(timer);signal?.removeEventListener('abort',abort);image.onload=null;image.onerror=null;error?reject(error):resolve();};const abort=()=>finish(new DOMException('Export cancelled','AbortError'));image.onload=()=>finish();image.onerror=()=>finish(new Error('Could not render animation frame'));timer=setTimeout(()=>finish(new Error('Animation frame rendering timed out')),10000);signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted){abort();return;}image.src=url;});}

@@ -1,27 +1,27 @@
-# HTML 导出入口
+# HTML Export API
 
-最终预览 HTML 默认提供 MP4 / GIF 导出面板、独立的“包含字幕”选项、进度、取消和下载链接。
+`mountExportControls` provides an MP4 / GIF panel with an independent Include subtitles option, progress, cancellation, and a download link.
 
 ```js
 import {mountExportControls} from './export-controls.js';
 const controls = mountExportControls(host, () => ({
   player,
-  options: {canvasDrawers}, // 同一作品的绘图函数、素材解析器和字幕样式
+  options: {canvasDrawers}, // The same drawers, asset resolver, and caption style.
   filename: 'my-animation',
 }));
-// 页面卸载时调用 controls.destroy()，取消导出并释放下载 URL。
+// On teardown, controls.destroy() cancels export and releases the download URL.
 ```
 
-打开面板时默认沿用预览字幕设置，此后独立选择。点击导出会暂停当前预览，但不会跳转或重置其位置；导出从零开始采样完整作品，不抓屏、不捕获页面按钮。切换预览作品不会改变已经捕获的导出来源。
+When first opened, the panel initializes its subtitle setting from the preview, then allows independent selection. Starting export pauses the current preview without seeking or resetting it. Export samples the entire animation from zero rather than recording the screen or page controls. Switching preview projects does not replace an export source already captured at the start of a job.
 
-“不含字幕”只关闭 runtime 的旁白字幕。画布内的标题、图表文字、作者自行绘制的文字仍保留。JSON 和 Canvas 自定义绘制均可导出；Canvas 之外的 DOM 不会录入。
+Disabling subtitles only removes runtime narration captions. Titles, chart labels, and other text drawn in the artwork remain. JSON graphics and Canvas drawers are supported; unrelated DOM is not captured.
 
-- MP4：控件默认 720p、30 fps、静音；需要浏览器支持 WebCodecs 的 H.264 编码。失败会显示原因，不悄悄改格式。
-- GIF：控件默认宽 480 像素、10 fps、循环播放、无声音。每帧最多 256 色，颜色和清晰度会有损失。API 还可选宽 320/640 和 15 fps。建议长片用 MP4。
-- 两种格式都在本地生成，动态加载本地模块，不依赖 CDN、上传或屏幕录制。
-- 编码按帧推进，可取消。GIF 最多 1800 帧、3 亿输出像素工作量和 128 MiB 编码结果；超额明确报错。原始帧逐帧处理，不保存整部片子的 RGBA。
+- MP4: panel defaults to 720p, 30 fps, silent. Requires browser WebCodecs support for H.264 encoding. Errors are shown without silently changing formats.
+- GIF: panel defaults to 480 pixels wide, 10 fps, looping, and silent. Each frame uses up to 256 colors, with reduced fidelity. The API also supports widths of 320/640 and 15 fps.
+- Both formats are generated locally with dynamically loaded local modules; no CDN, upload, or screen recording is required.
+- Encoding proceeds frame by frame and can be cancelled. GIF is limited to 1,800 frames, 300 million output pixels across all frames, and 128 MiB of encoded data. Exceeding limits produces an error. Raw RGBA frames are processed individually rather than retaining the entire animation.
 
-## 直接调用
+## Direct Calls
 
 ```js
 import {exportAnimationGif} from './export-gif.js';
@@ -34,6 +34,6 @@ const gif = await exportAnimationGif(JSON.stringify(player.compiled.document), {
 });
 ```
 
-MP4 使用 exportAnimationMp4，相同 options 中 fps 为 24/30，maxHeight 为 720/1080。自定义函数属于可信代码，必须是按绝对时间重绘的同步函数；两个导出器共用帧渲染、图片解码和字幕合成路径。用户自行修改的闭包状态不在播放器控制范围。
+MP4 uses `exportAnimationMp4`; its options support fps 24/30 and maxHeight 720/1080. Custom functions are trusted code and must redraw synchronously from absolute time. Both exporters share frame rendering, image decoding, and caption composition. Mutations to user-owned closure state remain outside player control.
 
-GIF 编码格式参考 [GIF89a 规范](https://www.w3.org/Graphics/GIF/spec-gif89a.txt)。采用逐帧局部调色板与 LZW；调色板可能使渐变或相近颜色产生量化变化。
+GIF uses per-frame local palettes and LZW, following the [GIF89a specification](https://www.w3.org/Graphics/GIF/spec-gif89a.txt). Palette quantization can alter gradients and similar colors.

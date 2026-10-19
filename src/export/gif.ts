@@ -41,10 +41,10 @@ function lzw(pixels:Uint8Array){
 export class GifEncoder {
  private parts:BlobPart[]=[];private bytes=0;private frames=0;private finished=false;
  constructor(private width:number,private height:number,private maxBytes=128*1024*1024){
-  if(!Number.isInteger(width)||!Number.isInteger(height)||width<1||height<1||width>960||height>960)throw new Error('GIF 尺寸必须在 1–960 像素范围');
+  if(!Number.isInteger(width)||!Number.isInteger(height)||width<1||height<1||width>960||height>960)throw new Error('GIF dimensions must be between 1 and 960 pixels');
   this.append(new Uint8Array([71,73,70,56,57,97,width&255,width>>8,height&255,height>>8,0x70,0,0,0x21,0xff,11,...Array.from('NETSCAPE2.0',c=>c.charCodeAt(0)),3,1,0,0,0]));
  }
- private append(bytes:Uint8Array<ArrayBuffer>){if(this.bytes+bytes.length>this.maxBytes)throw new Error('GIF 超过 128 MB，请降低分辨率或缩短片段');this.bytes+=bytes.length;this.parts.push(bytes);}
+ private append(bytes:Uint8Array<ArrayBuffer>){if(this.bytes+bytes.length>this.maxBytes)throw new Error('GIF exceeds 128 MB; reduce resolution or duration');this.bytes+=bytes.length;this.parts.push(bytes);}
  add(rgba:Uint8ClampedArray,delayCs:number){
   if(this.finished)throw new Error('GIF already finalized');
   if(rgba.length!==this.width*this.height*4||!Number.isInteger(delayCs)||delayCs<1||delayCs>65535)throw new Error('Invalid GIF frame');

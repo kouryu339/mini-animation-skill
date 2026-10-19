@@ -1,5 +1,5 @@
 import { n as e } from "./compile-CHXnrHMM.js";
-import { n as t, t as n } from "./frames-DShHTA_B.js";
+import { n as t, t as n } from "./frames-1L0mcmXx.js";
 //#region src/export/gif.ts
 function r(e) {
 	let t = /* @__PURE__ */ new Uint32Array(32768), n = /* @__PURE__ */ new Float64Array(32768), r = /* @__PURE__ */ new Float64Array(32768), i = /* @__PURE__ */ new Float64Array(32768);
@@ -83,7 +83,7 @@ var a = class {
 	frames = 0;
 	finished = !1;
 	constructor(e, t, n = 134217728) {
-		if (this.width = e, this.height = t, this.maxBytes = n, !Number.isInteger(e) || !Number.isInteger(t) || e < 1 || t < 1 || e > 960 || t > 960) throw Error("GIF 尺寸必须在 1–960 像素范围");
+		if (this.width = e, this.height = t, this.maxBytes = n, !Number.isInteger(e) || !Number.isInteger(t) || e < 1 || t < 1 || e > 960 || t > 960) throw Error("GIF dimensions must be between 1 and 960 pixels");
 		this.append(new Uint8Array([
 			71,
 			73,
@@ -110,7 +110,7 @@ var a = class {
 		]));
 	}
 	append(e) {
-		if (this.bytes + e.length > this.maxBytes) throw Error("GIF 超过 128 MB，请降低分辨率或缩短片段");
+		if (this.bytes + e.length > this.maxBytes) throw Error("GIF exceeds 128 MB; reduce resolution or duration");
 		this.bytes += e.length, this.parts.push(e);
 	}
 	add(e, t) {
@@ -162,9 +162,9 @@ async function o(r, i = {}) {
 		320,
 		480,
 		640
-	].includes(l)) throw Error("GIF 支持 10/15 fps 与 320/480/640 像素宽度");
+	].includes(l)) throw Error("GIF supports 10/15 fps and widths of 320/480/640 pixels");
 	let u = Math.min(1, l / s.width, 960 / s.height), d = Math.max(1, Math.round(s.width * u)), f = Math.max(1, Math.round(s.height * u)), p = Math.max(1, Math.round(s.duration / 10)), m = Math.min(p, Math.ceil(s.duration * c / 1e3));
-	if (m > 1800 || m * d * f > 3e8) throw Error("GIF 过长或尺寸过大，请降低分辨率或缩短片段");
+	if (m > 1800 || m * d * f > 3e8) throw Error("GIF exceeds frame or pixel limits; reduce resolution or duration");
 	let h = t(o, d, f, i, i.signal), g = new a(d, f);
 	try {
 		await h.prepare();
